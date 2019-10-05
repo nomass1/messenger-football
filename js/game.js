@@ -33,7 +33,7 @@ define(["require", "exports", "ball", "vector", "constants", "emoji"], function 
             this.context = canvas.getContext("2d");
             this.ball = new ball_1["default"](0.5 * 0.3, this);
             this.ballImg = new Image();
-            this.ballImg.src = "./../img/ball.svg";
+            this.ballImg.src = "img/ball.svg";
             this.emojis = [];
             this.highscore = 0;
             this.score = 0;

@@ -5,12 +5,12 @@ define(["require", "exports", "utils"], function (require, exports, utils_1) {
     var goodEmoji = [];
     for (var i = 0; i < 5; i++) {
         var emoji = new Image();
-        emoji.src = "./../img/emoji/bad/" + i + ".png";
+        emoji.src = "img/emoji/bad/" + i + ".png";
         badEmoji.push(emoji);
     }
     for (var i = 0; i < 4; i++) {
         var emoji = new Image();
-        emoji.src = "./../img/emoji/good/" + i + ".png";
+        emoji.src = "img/emoji/good/" + i + ".png";
         goodEmoji.push(emoji);
     }
     var offset = 0.2;
