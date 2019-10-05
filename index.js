@@ -36,15 +36,30 @@ var Vector = /** @class */ (function () {
 var Ball = /** @class */ (function () {
     function Ball(radius) {
         this.isMoving = false;
+        this.radius = radius;
+        this.reset();
+    }
+    Ball.prototype.reset = function () {
+        this.isMoving = false;
         this.resetPosition();
         this.velocity = new Vector(0, 0);
-        this.radius = radius;
-    }
+    };
     Ball.prototype.resetPosition = function () {
         this.position = new Vector(0.5, (canvas.height / unit) - this.radius);
     };
     Ball.prototype.updatePosition = function () {
         this.position = this.position.add(this.velocity);
+        if (this.position.x - this.radius <= 0) {
+            this.position.x = this.radius;
+            this.velocity.x *= -1;
+        }
+        if (this.position.x + this.radius >= 1) {
+            this.position.x = 1 - this.radius;
+            this.velocity.x *= -1;
+        }
+        if (this.position.y - (2 * this.radius) > (canvas.height / unit)) {
+            this.reset();
+        }
     };
     Ball.prototype.kick = function (pos) {
         var offset = pos.sub(this.position);

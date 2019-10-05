@@ -54,9 +54,14 @@ class Ball {
 	public isMoving = false;
 
 	constructor(radius: number) {
+		this.radius = radius;
+		this.reset();
+	}
+
+	public reset() {
+		this.isMoving = false;
 		this.resetPosition();
 		this.velocity = new Vector(0,0);
-		this.radius = radius;
 	}
 
 	public resetPosition() {		
@@ -65,6 +70,17 @@ class Ball {
 
 	public updatePosition() {
 		this.position = this.position.add(this.velocity);
+		if (this.position.x - this.radius <= 0) {
+			this.position.x = this.radius;
+			this.velocity.x *= -1;
+		}
+		if (this.position.x + this.radius >= 1) {
+			this.position.x = 1-this.radius;
+			this.velocity.x *= -1;
+		}
+		if (this.position.y - (2*this.radius) > (canvas.height/unit)) {
+			this.reset();
+		}
 	}
 
 	public kick(pos: Vector) {
