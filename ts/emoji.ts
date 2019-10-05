@@ -7,13 +7,13 @@ const goodEmoji: HTMLImageElement[] = [];
 
 for (let i = 0; i < 5; i++) {
 	let emoji = new Image();
-	emoji.src = "../img/emoji/bad/" + i + ".png";
+	emoji.src = "./../img/emoji/bad/" + i + ".png";
 	badEmoji.push(emoji);
 }
 
 for (let i = 0; i < 4; i++) {
 	let emoji = new Image();
-	emoji.src = "../img/emoji/good/" + i + ".png";
+	emoji.src = "./../img/emoji/good/" + i + ".png";
 	goodEmoji.push(emoji);
 }
 
