@@ -1,6 +1,9 @@
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const context = canvas.getContext("2d");
 const minRatio = 3/4;
+const fixedDeltaTime = 20;
+const gravity = 0.8;
+const kickSpeed = 20;
 let unit = 0;
 
 class Vector {
@@ -51,11 +54,28 @@ class Ball {
 	public isMoving = false;
 
 	constructor(radius: number) {
+		this.resetPosition();
+		this.velocity = new Vector(0,0);
 		this.radius = radius;
 	}
 
 	public resetPosition() {		
 		this.position = new Vector(0.5,(canvas.height/unit)-this.radius);
+	}
+
+	public updatePosition() {
+		this.position = this.position.add(this.velocity);
+	}
+
+	public kick(pos: Vector) {
+
+		let offset = pos.sub(this.position);
+		offset.y = -Math.abs(offset.y);
+		offset.y -= this.radius/3;
+		offset.x *= -1;
+		
+		this.velocity = offset.normalized().mult((kickSpeed)/1000);
+
 	}
 
 }
@@ -85,18 +105,23 @@ function updateCanvasSize() {
 
 }
 
-function handleClick(pos: Vector) {
+function onClick(pos: Vector) {
 
 	if (pos.sub(ball.position).sqrMagnitude() < (ball.radius * ball.radius)) {
-		
+		ball.isMoving = true;
+		ball.kick(pos);
 	}
 
 }
 
-function getCursorPosition(event: MouseEvent): Vector {
+function getCursorPosition(event: MouseEvent|TouchEvent): Vector {
+
+	const clientX = event instanceof MouseEvent? event.clientX : event.touches[0].clientX;
+	const clientY = event instanceof MouseEvent? event.clientY : event.touches[0].clientY;
+
 	const rect = canvas.getBoundingClientRect();
-	const x = event.clientX - rect.left;
-	const y = event.clientY - rect.top;
+	const x = clientX - rect.left;
+	const y = clientY - rect.top;
 	return new Vector(x/unit, y/unit);
 }
 
@@ -131,12 +156,27 @@ function start() {
 
 	window.requestAnimationFrame(frame);
 
+	setInterval(() => {
+		
+		if (ball.isMoving) {
+			ball.velocity.y += gravity/1000;
+			ball.updatePosition();
+		}
+
+	}, 20);
+
 }
 
 window.addEventListener("resize", updateCanvasSize);
 
-canvas.addEventListener('mousedown', function(e) {
-    handleClick(getCursorPosition(e));
+canvas.addEventListener("touchstart", function(e) {
+	onClick(getCursorPosition(e));	
+	e.preventDefault();
+});
+
+canvas.addEventListener("mousedown", function(e) {
+	onClick(getCursorPosition(e));	
+	e.preventDefault();
 });
 
 start();

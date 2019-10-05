@@ -1,6 +1,9 @@
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 var minRatio = 3 / 4;
+var fixedDeltaTime = 20;
+var gravity = 0.8;
+var kickSpeed = 20;
 var unit = 0;
 var Vector = /** @class */ (function () {
     function Vector(x, y) {
@@ -33,10 +36,22 @@ var Vector = /** @class */ (function () {
 var Ball = /** @class */ (function () {
     function Ball(radius) {
         this.isMoving = false;
+        this.resetPosition();
+        this.velocity = new Vector(0, 0);
         this.radius = radius;
     }
     Ball.prototype.resetPosition = function () {
         this.position = new Vector(0.5, (canvas.height / unit) - this.radius);
+    };
+    Ball.prototype.updatePosition = function () {
+        this.position = this.position.add(this.velocity);
+    };
+    Ball.prototype.kick = function (pos) {
+        var offset = pos.sub(this.position);
+        offset.y = -Math.abs(offset.y);
+        offset.y -= this.radius / 3;
+        offset.x *= -1;
+        this.velocity = offset.normalized().mult((kickSpeed) / 1000);
     };
     return Ball;
 }());
@@ -57,14 +72,18 @@ function updateCanvasSize() {
     }
     draw();
 }
-function handleClick(pos) {
+function onClick(pos) {
     if (pos.sub(ball.position).sqrMagnitude() < (ball.radius * ball.radius)) {
+        ball.isMoving = true;
+        ball.kick(pos);
     }
 }
 function getCursorPosition(event) {
+    var clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
+    var clientY = event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
     var rect = canvas.getBoundingClientRect();
-    var x = event.clientX - rect.left;
-    var y = event.clientY - rect.top;
+    var x = clientX - rect.left;
+    var y = clientY - rect.top;
     return new Vector(x / unit, y / unit);
 }
 function draw() {
@@ -89,9 +108,20 @@ function start() {
         window.requestAnimationFrame(frame);
     };
     window.requestAnimationFrame(frame);
+    setInterval(function () {
+        if (ball.isMoving) {
+            ball.velocity.y += gravity / 1000;
+            ball.updatePosition();
+        }
+    }, 20);
 }
 window.addEventListener("resize", updateCanvasSize);
-canvas.addEventListener('mousedown', function (e) {
-    handleClick(getCursorPosition(e));
+canvas.addEventListener("touchstart", function (e) {
+    onClick(getCursorPosition(e));
+    e.preventDefault();
+});
+canvas.addEventListener("mousedown", function (e) {
+    onClick(getCursorPosition(e));
+    e.preventDefault();
 });
 start();
