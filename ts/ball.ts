@@ -6,6 +6,8 @@ export default class Ball {
 
 	public position: Vector;
 	public velocity: Vector;
+	public angle: number;
+	public angularVelocity: number;
 	public radius: number;
 	public isMoving = false;
 	public game: Game;
@@ -19,6 +21,8 @@ export default class Ball {
 	public reset() {
 		this.isMoving = false;
 		this.resetPosition();
+		this.angularVelocity = 0;
+		this.angle = 0;
 		this.velocity = new Vector(0,0);
 	}
 
@@ -28,13 +32,16 @@ export default class Ball {
 
 	public updatePosition() {
 		this.position = this.position.add(this.velocity.mult(fixedDeltaTime));
+		this.angle += this.angularVelocity * fixedDeltaTime;
 		if (this.position.x - this.radius <= 0) {
 			this.position.x = this.radius;
 			this.velocity.x *= -1;
+			this.angularVelocity *= -1;
 		}
 		if (this.position.x + this.radius >= 1) {
 			this.position.x = 1-this.radius;
 			this.velocity.x *= -1;
+			this.angularVelocity *= -1;
 		}
 		if (this.position.y - (2*this.radius) > this.game.getWorldHeight()) {
 			this.reset();
@@ -47,6 +54,8 @@ export default class Ball {
 		offset.y = -Math.abs(offset.y);
 		offset.y -= this.radius/3;
 		offset.x *= -1;
+
+		this.angularVelocity = offset.x * 40 * Math.PI;		
 		
 		this.velocity = offset.normalized().mult(kickSpeed);
 

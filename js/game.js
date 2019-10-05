@@ -32,6 +32,8 @@ define(["require", "exports", "ball", "vector", "constants"], function (require,
             this.canvas = canvas;
             this.context = canvas.getContext("2d");
             this.ball = new ball_1["default"](0.5 * 0.3, this);
+            this.ballImg = new Image();
+            this.ballImg.src = "../img/ball.svg";
             window.addEventListener("resize", this.handleResizeEvent);
             this.canvas.addEventListener("touchstart", this.handleClickEvent);
             this.canvas.addEventListener("mousedown", this.handleClickEvent);
@@ -56,11 +58,15 @@ define(["require", "exports", "ball", "vector", "constants"], function (require,
         Game.prototype.draw = function () {
             this.context.fillStyle = "white";
             this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-            this.context.fillStyle = "blue";
-            this.context.beginPath();
-            this.context.arc(this.ball.position.x * this.unit, this.ball.position.y * this.unit, this.ball.radius * this.unit, 0, 2 * Math.PI);
-            this.context.closePath();
-            this.context.fill();
+            var x = (this.ball.position.x) * this.unit;
+            var y = (this.ball.position.y) * this.unit;
+            var width = (2 * this.ball.radius) * this.unit;
+            var height = (2 * this.ball.radius) * this.unit;
+            this.context.translate(x, y);
+            this.context.rotate(this.ball.angle);
+            this.context.drawImage(this.ballImg, -width / 2, -height / 2, width, height);
+            this.context.rotate(-this.ball.angle);
+            this.context.translate(-x, -y);
         };
         Game.prototype.update = function (deltaTime) {
             this.draw();

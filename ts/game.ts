@@ -8,12 +8,15 @@ export default class Game {
 	private context: CanvasRenderingContext2D;
 	private unit = 0;
 	private ball: Ball;
+	private ballImg: HTMLImageElement;
 
 	constructor(canvas: HTMLCanvasElement) {
 		
 		this.canvas = canvas;
 		this.context = canvas.getContext("2d");
 		this.ball = new Ball(0.5 * 0.3, this)
+		this.ballImg = new Image()
+		this.ballImg.src = "../img/ball.svg";
 
 		window.addEventListener("resize", this.handleResizeEvent);
 		this.canvas.addEventListener("touchstart", this.handleClickEvent);
@@ -83,11 +86,29 @@ export default class Game {
 		this.context.fillStyle = "white";
 		this.context.fillRect(0,0, this.canvas.width, this.canvas.height);
 	
-		this.context.fillStyle = "blue";
-		this.context.beginPath();
-		this.context.arc(this.ball.position.x * this.unit,this.ball.position.y * this.unit,this.ball.radius * this.unit,0,2*Math.PI)
-		this.context.closePath();
-		this.context.fill();
+		// this.context.fillStyle = "blue";
+		// this.context.beginPath();
+		// this.context.arc(this.ball.position.x * this.unit,this.ball.position.y * this.unit,this.ball.radius * this.unit,0,2*Math.PI)
+		// this.context.closePath();
+		// this.context.fill();
+
+		let x = (this.ball.position.x) * this.unit;
+		let y = (this.ball.position.y) * this.unit;
+		let width = (2 * this.ball.radius) * this.unit;
+		let height = (2 * this.ball.radius) * this.unit;
+		
+		this.context.translate(x, y);
+		this.context.rotate(this.ball.angle);
+		this.context.drawImage(this.ballImg, -width / 2, -height / 2, width, height);
+		this.context.rotate(-this.ball.angle);
+		this.context.translate(-x, -y);
+
+		// this.context.drawImage(
+		// 	this.ballImg,
+		// 	(this.ball.position.x - this.ball.radius) * this.unit,
+		// 	(this.ball.position.y - this.ball.radius) * this.unit,
+		// 	(2 * this.ball.radius) * this.unit,
+		// 	(2 * this.ball.radius) * this.unit);
 	
 	}
 	
