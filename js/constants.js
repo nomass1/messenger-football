@@ -5,5 +5,7 @@ define(["require", "exports"], function (require, exports) {
     exports.fixedDeltaTime = 20 / 1000;
     exports.gravity = 8;
     exports.kickSpeed = 3;
+    exports.emojiDelay = 1;
+    exports.emojiFadeDelay = 0.2;
 });
 //# sourceMappingURL=constants.js.map
