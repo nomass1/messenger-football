@@ -1,5 +1,6 @@
 import Vector from "vector";
 import Game from "game";
+import { easeOutElastic } from "utils";
 
 const badEmoji: HTMLImageElement[] = [];
 const goodEmoji: HTMLImageElement[] = [];
@@ -25,11 +26,6 @@ const goodDelay = 0.8;
 const goodDistance = 0.9;
 const goodFadeDelay = 0.2;
 const goodFadeDistance = 0.2;
-
-function easeOutElastic(t: number): number {
-	let p = 0.9;
-	return Math.pow(2,-10*t) * Math.sin((t-p/4)*(2*Math.PI)/p) + 1;
-}
 
 export default class EmojiParticle {
 

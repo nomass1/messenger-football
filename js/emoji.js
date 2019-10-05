@@ -1,4 +1,4 @@
-define(["require", "exports"], function (require, exports) {
+define(["require", "exports", "utils"], function (require, exports, utils_1) {
     "use strict";
     exports.__esModule = true;
     var badEmoji = [];
@@ -22,10 +22,6 @@ define(["require", "exports"], function (require, exports) {
     var goodDistance = 0.9;
     var goodFadeDelay = 0.2;
     var goodFadeDistance = 0.2;
-    function easeOutElastic(t) {
-        var p = 0.9;
-        return Math.pow(2, -10 * t) * Math.sin((t - p / 4) * (2 * Math.PI) / p) + 1;
-    }
     var EmojiParticle = (function () {
         function EmojiParticle(good, position, game) {
             this.timer = 0;
@@ -42,7 +38,7 @@ define(["require", "exports"], function (require, exports) {
         }
         EmojiParticle.prototype.update = function (deltaTime) {
             if (!this.fading) {
-                this.position.y = this.originalY + offset - (easeOutElastic(this.timer) * (this.good ? goodDistance : badDistance));
+                this.position.y = this.originalY + offset - (utils_1.easeOutElastic(this.timer) * (this.good ? goodDistance : badDistance));
                 this.alpha = Math.min(this.timer * 3, 1);
             }
             else {

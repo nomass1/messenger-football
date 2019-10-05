@@ -35,6 +35,8 @@ define(["require", "exports", "ball", "vector", "constants", "emoji"], function 
             this.ballImg = new Image();
             this.ballImg.src = "../img/ball.svg";
             this.emojis = [];
+            this.highscore = 0;
+            this.score = 0;
             window.addEventListener("resize", this.handleResizeEvent);
             this.canvas.addEventListener("touchstart", this.handleClickEvent);
             this.canvas.addEventListener("mousedown", this.handleClickEvent);
@@ -58,8 +60,16 @@ define(["require", "exports", "ball", "vector", "constants", "emoji"], function 
             if (clickedBall) {
                 this.ball.isMoving = true;
                 this.ball.kick(pos);
+                this.score++;
             }
             this.emojis.push(new emoji_1["default"](clickedBall, pos, this));
+        };
+        Game.prototype.fail = function () {
+            if (this.score > this.highscore) {
+                this.highscore = this.score;
+            }
+            this.ball.reset();
+            this.score = 0;
         };
         Game.prototype.removeEmoji = function (emoji) {
             this.emojis.splice(this.emojis.indexOf(emoji), 1);
@@ -67,6 +77,10 @@ define(["require", "exports", "ball", "vector", "constants", "emoji"], function 
         Game.prototype.draw = function () {
             this.context.fillStyle = "white";
             this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            this.context.font = (this.canvas.height / 6) + "px 'Roboto', Arial, sans-serif";
+            this.context.fillStyle = this.ball.isMoving ? "gray" : "#215cff";
+            this.context.textAlign = "center";
+            this.context.fillText((this.ball.isMoving ? this.score : this.highscore) + "", this.canvas.width / 2, this.canvas.height / 2);
             var x = (this.ball.position.x) * this.unit;
             var y = (this.ball.position.y) * this.unit;
             var width = (2 * this.ball.radius) * this.unit;

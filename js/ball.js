@@ -32,7 +32,7 @@ define(["require", "exports", "vector", "constants"], function (require, exports
                 this.angularVelocity *= -1;
             }
             if (this.position.y - (2 * this.radius) > this.game.getWorldHeight()) {
-                this.reset();
+                this.game.fail();
             }
         };
         Ball.prototype.kick = function (pos) {
