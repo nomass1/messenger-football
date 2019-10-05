@@ -1,50 +1,12 @@
+import Vector from "vector";
+
 const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const context = canvas.getContext("2d");
 const minRatio = 3/4;
-const fixedDeltaTime = 20;
-const gravity = 0.8;
-const kickSpeed = 20;
+const fixedDeltaTime = 20/1000;
+const gravity = 8;
+const kickSpeed = 3;
 let unit = 0;
-
-class Vector {
-	
-	public x: number;
-	public y: number;
-	
-	constructor(x?: number, y?: number) {
-		this.x = x ? x : 0;
-		this.y = y ? y : 0;
-	}
-
-	public add(vector2: Vector): Vector {
-		return new Vector(this.x + vector2.x, this.y + vector2.y);
-	}
-
-	public sub(vector2: Vector): Vector {
-		return new Vector(this.x - vector2.x, this.y - vector2.y);
-	}
-
-	public mult(factor: number): Vector {
-		return new Vector(this.x * factor, this.y * factor);
-	}
-
-	public div(divisor: number): Vector {
-		return new Vector(this.x / divisor, this.y / divisor);
-	}
-
-	public sqrMagnitude(): number {
-		return (this.x * this.x) + (this.y * this.y);
-	}
-
-	public magnitude(): number {
-		return Math.sqrt(this.sqrMagnitude());
-	}
-
-	public normalized(): Vector {
-		return this.div(this.magnitude());
-	}
-
-}
 
 class Ball {
 
@@ -69,7 +31,7 @@ class Ball {
 	}
 
 	public updatePosition() {
-		this.position = this.position.add(this.velocity);
+		this.position = this.position.add(this.velocity.mult(fixedDeltaTime));
 		if (this.position.x - this.radius <= 0) {
 			this.position.x = this.radius;
 			this.velocity.x *= -1;
@@ -90,13 +52,13 @@ class Ball {
 		offset.y -= this.radius/3;
 		offset.x *= -1;
 		
-		this.velocity = offset.normalized().mult((kickSpeed)/1000);
+		this.velocity = offset.normalized().mult(kickSpeed);
 
 	}
 
 }
 
-const ball = new Ball(0.5/3);
+const ball = new Ball(0.5 * 0.3);
 
 function updateCanvasSize() {
 
@@ -162,7 +124,7 @@ function start() {
 
 	updateCanvasSize();
 	
-	let last = undefined;
+	let last: number = undefined;
 	const frame = (timeStamp: DOMHighResTimeStamp) => {
 		let curr = timeStamp;
 		update(last ? (curr-last)/1000 : 1/60);
@@ -175,11 +137,11 @@ function start() {
 	setInterval(() => {
 		
 		if (ball.isMoving) {
-			ball.velocity.y += gravity/1000;
+			ball.velocity.y += gravity * fixedDeltaTime;
 			ball.updatePosition();
 		}
 
-	}, 20);
+	}, fixedDeltaTime * 1000);
 
 }
 

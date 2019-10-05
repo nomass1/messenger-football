@@ -11,6 +11,6 @@ body {
 canvas {
 	margin: 0 auto;
 	display: block;
-	box-shadow: 0 0 60px 20px rgba(255, 255, 255, 0.13);	
+	box-shadow: 0 0 40px 0px rgba(0, 0, 0, 0.42);
 	touch-action: none;
 }
