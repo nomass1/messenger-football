@@ -13,7 +13,7 @@ for (let i = 0; i < 5; i++) {
 
 for (let i = 0; i < 4; i++) {
 	let emoji = new Image();
-	emoji.src = "img/emoji/good/" + i + ".png";
+	emoji.src = "img/Baby-Face-02.jpg";
 	goodEmoji.push(emoji);
 }
 
